@@ -5,3 +5,15 @@ from argon2 import PasswordHasher
 from flask_cors import CORS
 from cryptography.fernet import Fernet
 
+app = Flask(__name__)
+
+
+@app.route("/")
+def main():
+    return "main route"
+
+
+
+
+if __name__ == "__main__":
+    app.run()
