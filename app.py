@@ -6,6 +6,10 @@ from flask_cors import CORS
 from cryptography.fernet import Fernet
 
 app = Flask(__name__)
+dotenv.load_dotenv()
+app.config['MONGO_URI'] = os.environ.get('MONGO_URI', None)
+mongo = PyMongo(app)
+
 
 
 @app.route("/")
