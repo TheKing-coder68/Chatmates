@@ -28,7 +28,8 @@ def signup():
         if login.find_one({'email': email}) is not None:  # Make sure their email does not already exist
             return render_template('signup.html', error='This email is already associated with an account')  # Return an error message if it does
         login.insert_one({"firstName": request.form.get("firstName"), "lastName": request.form.get("lastName"),
-                          "email": email, "username": request.form.get("username")})  # Create a new document in the login database with all their info
+                          "email": email, "username": request.form.get("username"),
+                          "password": request.form.get("password")})  # Create a new document in the login database with all their info
         return render_template("index.html")
     return render_template("signup.html")  # If none of the other stuff happens, take them to the sign up page
 
