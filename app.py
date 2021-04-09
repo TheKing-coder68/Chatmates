@@ -41,12 +41,33 @@ def signup():
                           "email": email, "username": request.form.get("username"),
 
                           "password": request.form.get("password")})  # Create a new document in the login database with all their info
-
-        return render_template("index.html")
+        response = make_response(render_template("index.html"))
+        cookie = json.dumps({'email': email})
+        cookie = str.encode(cookie)
+        cookie = base64.b64encode(cookie)
+        response.set_cookie('login_info', cookie, max_age=172800)
+        return response
 
     return render_template("signup.html")  # If none of the other stuff happens, take them to the sign up page
 
 
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
+        login = mongo.db.login
+        if not login.find_one({"email": request.form.get("email").lower()}):
+            flash("This email is not associated with an account.")
+            return render_template("login.html")
+        if not login.find_one({"email": request.form.get("email").lower(), "password": request.form.get("password")}):
+            flash("Incorrect password.")
+            return render_template("login.html")
+        response = make_response(render_template("index.html"))
+        cookie = json.dumps({'email': request.form.get('email').lower()})
+        cookie = str.encode(cookie)
+        cookie = base64.b64encode(cookie)
+        response.set_cookie('login_info', cookie, max_age=172800)
+        return response
+    return render_template("login.html")
 
 
 

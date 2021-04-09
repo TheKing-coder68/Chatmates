@@ -4,13 +4,14 @@
 {% block content %}
 <h1>Login Page</h1>
 <div>
-    <form>
+    <form action="/login" method="POST">
         <!--Email Form-->
         <label for="email">Email</label><br>
         <input type="email" name="email" id="email" placeholder="Email"><br>
         <!--Password Form-->
         <label for="password">Password</label><br>
         <input type="password" name="password" id="password" placeholder="Password"><br>
+        <button type="submit">Submit</button>
     </form> 
 </div>
 {% endblock %}
