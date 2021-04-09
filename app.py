@@ -47,5 +47,8 @@ def signup():
     return render_template("signup.html")  # If none of the other stuff happens, take them to the sign up page
 
 
+
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
