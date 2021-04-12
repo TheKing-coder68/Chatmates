@@ -48,13 +48,12 @@ def signup():
                           "email": email, "username": request.form.get("username"),
 
                           "password": request.form.get("password")})  # Create a new document in the login database with all their info
-        response = make_response(render_template("index.html"))
-        cookie = json.dumps({'email': email})
-        cookie = str.encode(cookie)
-        cookie = base64.b64encode(cookie)
-        response.set_cookie('login_info', cookie, max_age=172800)
-        return response
-
+        response = make_response(render_template("index.html"))  # Create a response object of the rendered website HTML
+        cookie = json.dumps({'email': email})  # Create a json encoded key: value pair with their email
+        cookie = str.encode(cookie)  # Encode the key: value pair into bytes
+        cookie = base64.b64encode(cookie)  # base64 encode the cookie to make it more secure
+        response.set_cookie('login_info', cookie,max_age=172800)  # Set the cookie to the website and make it expire after 2 days for security
+        return response  # Return our response object, solidifying the cookie creation and showing the page to the user.
     return render_template("signup.html")  # If none of the other stuff happens, take them to the sign up page
 
 
