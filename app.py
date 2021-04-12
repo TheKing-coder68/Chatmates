@@ -28,10 +28,12 @@ def signup():
         email = request.form.get("email").lower()  # Get the person's email
 
         password= request.form.get("password")  # Get the person's password
+        username= request.form.get("username")  # Get the person's username
         
         if len(password)<8:
-            flash("That password is not security, please try another one.") #Flashes this msg if the password is shorter than 8 characters
-        
+            flash("That password is not secure, please try another one.") #Flashes this msg if the password is shorter than 8 characters
+        if len(username) < 3:
+            flash("Thats username is not long enough, please try again")
         if not re.search('^[^@ ]+@[^@ ]+\.[^@ .]{2,}$', email):  # Check to make sure they entered a valid email
 
             flash("The Email that you entered is not valid, please try again.")  # Return an error message if they didn't (will be implemented later)
