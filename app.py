@@ -21,27 +21,30 @@ def main():
 
 @app.route("/create_server")
 def create_server():
-    if request.cookies.get('login_info'):
-        login_info = json.loads(base64.b64decode(request.cookies.get('login_info')))
-        servers = mongo.db.servers
-        ids = [dict(server)['id'] for server in servers.find()]
-        id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])
-        while id in ids:
-            id = ''.join([str(random.randint(0, 10)) for _ in range(4)])
+    if request.cookies.get('login_info'):  # Check to see if they are logged in
+        login_info = json.loads(base64.b64decode(request.cookies.get('login_info')))  # Decode all that login information (the email_
+        servers = mongo.db.servers  # Get the servers collection
+        ids = [dict(server)['id'] for server in servers.find()]  # Create a list of all server ids using a list comp
+        id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])  # Generate a random 16 letter ID
+        while id in ids:  # While the ID already exists, create a new one
+            id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])
         channel_ids = [channel_id for channel_id in [[channel['id'] for channel in server] for server in servers.find()]]
+        # This bit of code above is quite a bitch. Basically, the inside is a list comp getting every server.
+        # Then, the next inner bit, ([channel['id'] for channel in server]), is going through and getting the ID of every channel in every server.
+        # Finally, the very beginning is putting every id of every server in a list.
         print(channel_ids)
-        channel_id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])
-        while channel_id in channel_ids:
+        channel_id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])  # Generate a random 16 letter ID
+        while channel_id in channel_ids:  # While the ID already exists, create a new one
             channel_id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])
         servers.insert_one({'name': request.args.get("name"), 'id': id,
                             'channels': [{'name': 'general', 'id': channel_id,
                                           'messages': []}],
                             'members': [{'email': login_info['email'], 'nickname': '',
                                          'messages': 0}],
-                            'logo': ''})
-        return 'done'
+                            'logo': ''})  # Create a document with all that collected information
+        return 'done'  # Display 'done' to the page
     else:
-        return redirect("/signup")
+        return redirect("/login")  # If they're not logged in, redirect them to the login page
 
 
 @app.route("/signup", methods=["POST", "GET"])
