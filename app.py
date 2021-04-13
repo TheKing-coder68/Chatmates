@@ -28,11 +28,10 @@ def create_server():
         id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])  # Generate a random 16 letter ID
         while id in ids:  # While the ID already exists, create a new one
             id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])
-        channel_ids = [channel_id for channel_id in [[channel['id'] for channel in server] for server in servers.find()]]
+        channel_ids = [channel_id for channel_id in [[channel['id'] for channel in server['channels']] for server in servers.find()]]
         # This bit of code above is quite a bitch. Basically, the inside is a list comp getting every server.
         # Then, the next inner bit, ([channel['id'] for channel in server]), is going through and getting the ID of every channel in every server.
         # Finally, the very beginning is putting every id of every server in a list.
-        print(channel_ids)
         channel_id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])  # Generate a random 16 letter ID
         while channel_id in channel_ids:  # While the ID already exists, create a new one
             channel_id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])
