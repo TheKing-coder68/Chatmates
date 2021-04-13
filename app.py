@@ -9,14 +9,39 @@ from datetime import timedelta
 app = Flask(__name__)
 dotenv.load_dotenv()
 app.config['MONGO_URI'] = os.environ.get('MONGO_URI', None)
-app.config['SECRET_KEY'] = "23435khhdajk983hagsdh134dsda745112dsfksa93assd0sas8s"
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', None)
 mongo = PyMongo(app)
 
 
 
 @app.route("/")
 def main():
-    return "main route"
+    return render_template("servers.html")
+
+
+@app.route("/create_server")
+def create_server():
+    if request.cookies.get('login_info'):
+        login_info = json.loads(base64.b64decode(request.cookies.get('login_info')))
+        servers = mongo.db.servers
+        ids = [dict(server)['id'] for server in servers.find()]
+        id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])
+        while id in ids:
+            id = ''.join([str(random.randint(0, 10)) for _ in range(4)])
+        channel_ids = [channel_id for channel_id in [[channel['id'] for channel in server] for server in servers.find()]]
+        print(channel_ids)
+        channel_id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])
+        while channel_id in channel_ids:
+            channel_id = ''.join([random.choice([char for char in string.ascii_letters]) for _ in range(16)])
+        servers.insert_one({'name': request.args.get("name"), 'id': id,
+                            'channels': [{'name': 'general', 'id': channel_id,
+                                          'messages': []}],
+                            'members': [{'email': login_info['email'], 'nickname': '',
+                                         'messages': 0}],
+                            'logo': ''})
+        return 'done'
+    else:
+        return redirect("/signup")
 
 
 @app.route("/signup", methods=["POST", "GET"])
@@ -47,8 +72,8 @@ def signup():
 
                           "password": request.form.get("password")})  # Create a new document in the login database with all their info
         response = make_response(render_template("index.html"))  # Create a response object of the rendered website HTML
-        cookie = json.dumps({'email': email})  # Create a json encoded key: value pair with their email
-        cookie = str.encode(cookie)  # Encode the key: value pair into bytes
+        cookie = json.dumps({'email': email, 'username': request.form.get("username")})  # Create a json encoded key: value pair with their email
+        cookie = cookie.encode()  # Encode the key: value pair into bytes
         cookie = base64.b64encode(cookie)  # base64 encode the cookie to make it more secure
         response.set_cookie('login_info', cookie,max_age=172800)  # Set the cookie to the website and make it expire after 2 days for security
         return response  # Return our response object, solidifying the cookie creation and showing the page to the user.
@@ -66,8 +91,8 @@ def login():
             flash("Incorrect password.")
             return render_template("login.html")
         response = make_response(render_template("index.html"))
-        cookie = json.dumps({'email': request.form.get('email').lower()})
-        cookie = str.encode(cookie)
+        cookie = json.dumps({'email': request.form.get('email').lower(), 'username': request.form.get("username")})
+        cookie = cookie.encode()
         cookie = base64.b64encode(cookie)
         response.set_cookie('login_info', cookie, max_age=172800)
         return response
