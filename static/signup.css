@@ -1,0 +1,51 @@
+p, div, form, button {color: white}
+
+form {
+    width: 450px;
+    height: 400px;
+    background: #488DE8;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30%;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.15)
+}
+
+body, html {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#username, #password, #email {
+    border: none;
+    height: 100px;
+    width: 90%;
+    border-radius: 3px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    padding-left: 10px
+}
+
+#username::placeholder, #password::placeholder, #email::placeholder {
+    font: 500 15px Montserrat
+}
+
+h2 {font: 600 30px Montserrat}
+
+#signup {
+    border: none;
+    width: 40%;
+    height: 30%;
+    margin: 20px 0;
+    border-radius: 5px;
+    font: 400 18px Montserrat;
+    cursor: pointer;
+    background: #489de8;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.25)
+}
+
+#signup:hover {box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.25) inset}

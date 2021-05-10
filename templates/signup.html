@@ -1,35 +1,30 @@
-{% extends 'base.html' %}
-{% block title %} <title> Signup </title> {% endblock %}
-
-{% block content %} 
-{% with messages=get_flashed_messages()%}
-	{% if messages %}
-		{%for msg in messages%}
-			<p>{{msg}}</p>
-		{% endfor %}
-	{% endif %}
-{% endwith %}
-
-<h1 align="center">Signup</h1>
-<div>
-    <form method="POST">
-        <!--First Name-->
-        <label for="firstName"> First Name </label>
-        <input type="text" name="firstName" id="firstName" placeholder="First Name"> <br>
-        <!--Last Name-->
-        <label for="lastName"> Last Name </label>
-        <input type="text" name="lastName" id="lastName" placeholder="Last Name"> <br>
-        <!--Username-->
-        <label for="username"> Username</label>
-        <input type="text" name="username" id="username" placeholder="Username"><br>
-        <!--Email-->
-        <label for="email"> Email </label>
-        <input type="email" name="email" id="email" placeholder="Email"> <br>
-        <!--Password-->
-        <label for="password"> Password</label>
-        <input type="password" name="password" id="password" placeholder="Password"> <br>
-        <!--Submit-->
-        <input type="submit" id="submit" placeholder="Submit">
-    </form>
-</div>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+        <link href="{{ url_for('static', filename='signup.css') }}" rel="stylesheet"/>
+        <title>Signup</title>
+    </head>
+    <body>
+        <form>
+            <h2>Create an Account</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="email" id="email" placeholder="Email address">
+            <input type="password" id="password" placeholder="Password">
+            <button type="button" onclick="signUp()" id="signup">Sign Up</button>
+        </form>
+    </body>
+    <script>
+        async function signUp() {
+            await fetch(`/signup?username=${document.getElementById("username").value}&email=${document.getElementById("email").value}&password=${document.getElementById("password").value}`,
+            {method: 'POST'})
+            location.replace("/")
+        }
+    </script>
+</html>

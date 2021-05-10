@@ -49,32 +49,22 @@ def create_server():
 @app.route("/signup", methods=["POST", "GET"])
 def signup():
     if request.method == "POST":  # Check to make sure it's a post
-    
         login = mongo.db.login  # Get the login collection
-    
-        email = request.form.get("email").lower()  # Get the person's email
-
-        password= request.form.get("password")  # Get the person's password
-        username= request.form.get("username")  # Get the person's username
-        
-        if len(password)<8:
-            flash("That password is not secure, please try another one.") #Flashes this msg if the password is shorter than 8 characters
+        email = request.args.get("email").lower()  # Get the person's email
+        password = request.args.get("password")  # Get the person's password
+        username = request.args.get("username")  # Get the person's username
+        if len(password) < 8:
+            return render_template("signup.html", error="password_not_long")
         if len(username) < 3:
-            flash("Thats username is not long enough, please try again")
+            return render_template("signup.html", error="username_not_long")
         if not re.search('^[^@ ]+@[^@ ]+\.[^@ .]{2,}$', email):  # Check to make sure they entered a valid email
-
-            flash("The Email that you entered is not valid, please try again.")  # Return an error message if they didn't (will be implemented later)
-
+            return render_template("signup.html", error="invalid_email")
         if login.find_one({'email': email}) is not None:  # Make sure their email does not already exist
-            
-            flash("This email is already associated with an account.")  # Return an error message if it does
-            return redirect('/signup')
+            return render_template("signup.html", error="username_in_use")
 
-        login.insert_one({"firstName": request.form.get("firstName"), "lastName": request.form.get("lastName"),
-
-                          "email": email, "username": request.form.get("username"),
-
-                          "password": request.form.get("password")})  # Create a new document in the login database with all their info
+        login.insert_one({"firstName": request.args.get("firstName"), "lastName": request.args.get("lastName"),
+                          "email": email, "username": username, "password": password})
+        # Create a new document in the login database with all their info
         response = make_response(render_template("index.html"))  # Create a response object of the rendered website HTML
         cookie = json.dumps({'email': email, 'username': request.form.get("username")})  # Create a json encoded key: value pair with their email
         cookie = cookie.encode()  # Encode the key: value pair into bytes
@@ -105,4 +95,4 @@ def login():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=True, port=5003)
