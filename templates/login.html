@@ -1,17 +1,29 @@
-{% extends 'base.html' %}
-{% block title %} <title> Login</title> {% endblock %}
-
-{% block content %}
-<h1>Login Page</h1>
-<div>
-    <form action="/login" method="POST">
-        <!--Email Form-->
-        <label for="email">Email</label><br>
-        <input type="email" name="email" id="email" placeholder="Email"><br>
-        <!--Password Form-->
-        <label for="password">Password</label><br>
-        <input type="password" name="password" id="password" placeholder="Password"><br>
-        <button type="submit">Submit</button>
-    </form> 
-</div>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+        <link href="{{ url_for('static', filename='signup.css') }}" rel="stylesheet"/>
+        <title>Signup</title>
+    </head>
+    <body>
+        <form>
+            <h2>Login to Chatmates</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button type="button" onclick="logIn()" id="signup">Sign Up</button>
+        </form>
+    </body>
+    <script>
+        async function logIn() {
+            await fetch(`/login?username=${document.getElementById("username").value}&password=${document.getElementById("password").value}`,
+            {method: 'POST'})
+            location.replace("/")
+        }
+    </script>
+</html>

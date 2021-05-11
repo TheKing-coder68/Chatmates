@@ -79,11 +79,9 @@ def login():
     if request.method == "POST":
         login = mongo.db.login
         if not login.find_one({"email": request.form.get("email").lower()}):
-            flash("This email is not associated with an account.")
-            return render_template("login.html")
+            return render_template("login.html", error="no_email")
         if not login.find_one({"email": request.form.get("email").lower(), "password": request.form.get("password")}):
-            flash("Incorrect password.")
-            return render_template("login.html")
+            return render_template("login.html", error="incorrect_password")
         response = make_response(render_template("index.html"))
         cookie = json.dumps({'email': request.form.get('email').lower(), 'username': request.form.get("username")})
         cookie = cookie.encode()
